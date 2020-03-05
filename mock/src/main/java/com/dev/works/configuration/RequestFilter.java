@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Component;
 
@@ -21,9 +22,12 @@ public class RequestFilter implements Filter {
 		
 		System.out.println("Inside RequestFilter doFilter");
 		HttpServletRequest req = (HttpServletRequest) request;
+		HttpServletResponse res = (HttpServletResponse) response;
 		
 		RequestWrapper requestWrapper = new RequestWrapper(req);
-		chain.doFilter(requestWrapper, response);
+		ResponseWrapper responseWrapper = new ResponseWrapper(res);
+		chain.doFilter(requestWrapper, responseWrapper);
+		response.getOutputStream().write("{\\\"name\\\":\\\"rohith123\\\"}".getBytes());
 	}
 
 	@Override
