@@ -2,16 +2,15 @@ package com.dev.works.configuration;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
-import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.springframework.http.MediaType;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 
 public class ResponseWrapper extends HttpServletResponseWrapper {
 
@@ -19,21 +18,23 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 	PrintWriter printWriter;
 	
 	ByteArrayPrinter pw = new ByteArrayPrinter();
+	private String responseBody;
 	
 	public ResponseWrapper(HttpServletResponse response) throws IOException {
 		super(response);
 
-		ServletOutputStream outputStream = response.getOutputStream();
+		ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(response);
 		
 		byteArrayOutputStream = new ByteArrayOutputStream();
 		
-		byteArrayOutputStream.write("{\"name\":\"rohith\"}".getBytes());
+		String s = new String(responseWrapper.getContentAsByteArray());
 		
-		String responseData = byteArrayOutputStream.toString();
+		byteArrayOutputStream.write(s.getBytes());
+		this.setResponseBody(byteArrayOutputStream.toString());
 		
 	}
 
-	@Override
+/*	@Override
     public void setContentType(final String type) {
         super.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
     }
@@ -49,6 +50,14 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 
         String ct = (response != null) ? response.getContentType() : null;
         return pw.getStream();
-    }
+    }*/
+
+	public String getResponseBody() {
+		return responseBody;
+	}
+
+	public void setResponseBody(String responseBody) {
+		this.responseBody = responseBody;
+	}
     
 }

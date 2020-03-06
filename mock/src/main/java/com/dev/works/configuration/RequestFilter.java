@@ -9,11 +9,12 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
+@Order(1)
 public class RequestFilter implements Filter {
 
 	@Override
@@ -22,12 +23,8 @@ public class RequestFilter implements Filter {
 		
 		System.out.println("Inside RequestFilter doFilter");
 		HttpServletRequest req = (HttpServletRequest) request;
-		HttpServletResponse res = (HttpServletResponse) response;
-		
 		RequestWrapper requestWrapper = new RequestWrapper(req);
-		ResponseWrapper responseWrapper = new ResponseWrapper(res);
-		chain.doFilter(requestWrapper, responseWrapper);
-		response.getOutputStream().write("{\\\"name\\\":\\\"rohith123\\\"}".getBytes());
+		chain.doFilter(requestWrapper, response);
 	}
 
 	@Override
