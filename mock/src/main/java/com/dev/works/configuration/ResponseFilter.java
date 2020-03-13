@@ -1,6 +1,5 @@
 package com.dev.works.configuration;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -25,9 +24,9 @@ public class ResponseFilter implements Filter {
 
 		System.out.println("Inside ResponseFilter doFilter");
 		HttpServletResponse res = (HttpServletResponse) response;
-
-		ResponseWrapper responseWrapper = new ResponseWrapper(res);
-		chain.doFilter(request, responseWrapper);
+		ContentCachingResponseWrapper resw = new ContentCachingResponseWrapper(res);
+		chain.doFilter(request, resw);
+		ResponseWrapper responseWrapper = new ResponseWrapper(resw);
 		res.getOutputStream().write(responseWrapper.getResponseBody().getBytes());
 	}
 
