@@ -37,5 +37,4 @@ public class RequestFilter implements Filter {
 		Filter.super.destroy();
 	}
 	
-	
 }
